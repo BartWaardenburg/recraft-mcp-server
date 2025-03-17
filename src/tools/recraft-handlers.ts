@@ -368,8 +368,11 @@ export class RecraftHandlers {
     const { image_url, image_b64, output_path, filename } = validatedArgs;
 
     try {
-      // Create the directory if it doesn't exist
-      fs.mkdirSync(output_path, { recursive: true });
+      // Ensure output_path is absolute
+      const absolutePath = path.resolve(output_path);
+
+      // Create all parent directories if they don't exist
+      await fs.promises.mkdir(absolutePath, { recursive: true });
 
       // Determine file extension based on image data
       let fileExtension = "png";
@@ -392,10 +395,10 @@ export class RecraftHandlers {
         }
 
         const outputFilePath = path.join(
-          output_path,
+          absolutePath,
           `${filename}.${fileExtension}`
         );
-        fs.writeFileSync(outputFilePath, imageData);
+        await fs.promises.writeFile(outputFilePath, imageData);
 
         return {
           success: true,
@@ -411,7 +414,7 @@ export class RecraftHandlers {
         }
 
         const outputFilePath = path.join(
-          output_path,
+          absolutePath,
           `${filename}.${fileExtension}`
         );
 

@@ -8,8 +8,8 @@
     "build": "tsup src/index.ts --format esm --dts --clean",
     "postbuild": "chmod +x dist/index.js",
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector",
+    "dev": "npx fastmcp dev src/index.ts",
+    "inspect": "npx fastmcp inspect src/index.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
@@ -29,6 +29,7 @@
     "@modelcontextprotocol/sdk": "^1.7.0",
     "axios": "^1.8.1",
     "dotenv": "^16.4.7",
+    "fastmcp": "^1.20.5",
     "zod": "^3.23.8",
     "zod-to-json-schema": "^3.24.4"
   },
