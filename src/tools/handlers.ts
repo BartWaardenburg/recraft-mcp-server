@@ -5,7 +5,18 @@
 import { McpError, ErrorCode } from "@modelcontextprotocol/sdk/types.js";
 import { RecraftHandlers } from "./recraft-handlers.js";
 import { validateSchemaAs } from "../schemas/validation.js";
-import { GenerateImageArgsSchema } from "../schemas/recraft.js";
+import {
+  GenerateImageArgsSchema,
+  ImageToImageArgsSchema,
+  InpaintImageArgsSchema,
+  ReplaceBackgroundArgsSchema,
+  VectorizeImageArgsSchema,
+  RemoveBackgroundArgsSchema,
+  CrispUpscaleArgsSchema,
+  CreativeUpscaleArgsSchema,
+  CreateStyleArgsSchema,
+  SaveImageToDiskArgsSchema,
+} from "../schemas/recraft.js";
 
 /**
  * Main tool handlers class that delegates to specialized handlers
@@ -59,6 +70,11 @@ export class ToolHandlers {
    */
   public async handleImageToImage(args: unknown) {
     try {
+      validateSchemaAs(
+        ImageToImageArgsSchema,
+        args,
+        "Invalid image-to-image parameters"
+      );
       return await this.recraftHandlers.handleImageToImage(args);
     } catch (error) {
       if (error instanceof McpError) {
@@ -79,7 +95,24 @@ export class ToolHandlers {
    * @returns Response with inpainted image information
    */
   public async handleInpaintImage(args: unknown) {
-    return this.recraftHandlers.handleInpaintImage(args);
+    try {
+      validateSchemaAs(
+        InpaintImageArgsSchema,
+        args,
+        "Invalid inpainting parameters"
+      );
+      return await this.recraftHandlers.handleInpaintImage(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to inpaint image: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -88,7 +121,24 @@ export class ToolHandlers {
    * @returns Response with image information
    */
   public async handleReplaceBackground(args: unknown) {
-    return this.recraftHandlers.handleReplaceBackground(args);
+    try {
+      validateSchemaAs(
+        ReplaceBackgroundArgsSchema,
+        args,
+        "Invalid background replacement parameters"
+      );
+      return await this.recraftHandlers.handleReplaceBackground(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to replace background: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -97,7 +147,24 @@ export class ToolHandlers {
    * @returns Response with vectorized image information
    */
   public async handleVectorizeImage(args: unknown) {
-    return this.recraftHandlers.handleVectorizeImage(args);
+    try {
+      validateSchemaAs(
+        VectorizeImageArgsSchema,
+        args,
+        "Invalid vectorization parameters"
+      );
+      return await this.recraftHandlers.handleVectorizeImage(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to vectorize image: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -106,7 +173,24 @@ export class ToolHandlers {
    * @returns Response with image information
    */
   public async handleRemoveBackground(args: unknown) {
-    return this.recraftHandlers.handleRemoveBackground(args);
+    try {
+      validateSchemaAs(
+        RemoveBackgroundArgsSchema,
+        args,
+        "Invalid background removal parameters"
+      );
+      return await this.recraftHandlers.handleRemoveBackground(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to remove background: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -115,7 +199,24 @@ export class ToolHandlers {
    * @returns Response with upscaled image information
    */
   public async handleCrispUpscale(args: unknown) {
-    return this.recraftHandlers.handleCrispUpscale(args);
+    try {
+      validateSchemaAs(
+        CrispUpscaleArgsSchema,
+        args,
+        "Invalid crisp upscale parameters"
+      );
+      return await this.recraftHandlers.handleCrispUpscale(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to upscale image: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -124,7 +225,24 @@ export class ToolHandlers {
    * @returns Response with upscaled image information
    */
   public async handleCreativeUpscale(args: unknown) {
-    return this.recraftHandlers.handleCreativeUpscale(args);
+    try {
+      validateSchemaAs(
+        CreativeUpscaleArgsSchema,
+        args,
+        "Invalid creative upscale parameters"
+      );
+      return await this.recraftHandlers.handleCreativeUpscale(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to upscale image: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -133,7 +251,24 @@ export class ToolHandlers {
    * @returns Response with style information
    */
   public async handleCreateStyle(args: unknown) {
-    return this.recraftHandlers.handleCreateStyle(args);
+    try {
+      validateSchemaAs(
+        CreateStyleArgsSchema,
+        args,
+        "Invalid style creation parameters"
+      );
+      return await this.recraftHandlers.handleCreateStyle(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to create style: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -141,7 +276,19 @@ export class ToolHandlers {
    * @returns Response with user information
    */
   public async handleGetUserInfo() {
-    return this.recraftHandlers.handleGetUserInfo();
+    try {
+      return await this.recraftHandlers.handleGetUserInfo();
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to get user info: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 
   /**
@@ -150,6 +297,23 @@ export class ToolHandlers {
    * @returns Response with saved image information
    */
   public async handleSaveImageToDisk(args: unknown) {
-    return this.recraftHandlers.handleSaveImageToDisk(args);
+    try {
+      validateSchemaAs(
+        SaveImageToDiskArgsSchema,
+        args,
+        "Invalid save image parameters"
+      );
+      return await this.recraftHandlers.handleSaveImageToDisk(args);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(
+        ErrorCode.InvalidParams,
+        `Failed to save image: ${
+          error instanceof Error ? error.message : "unknown error"
+        }`
+      );
+    }
   }
 }

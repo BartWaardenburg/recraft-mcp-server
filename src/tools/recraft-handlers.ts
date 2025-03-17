@@ -351,15 +351,7 @@ export class RecraftHandlers {
    * @returns Response with user information
    */
   public async handleGetUserInfo() {
-    const response = await this.recraft.getUserInfo();
-    return {
-      content: [
-        {
-          type: "text",
-          text: JSON.stringify(response, null, 2),
-        },
-      ],
-    };
+    return await this.recraft.getUserInfo();
   }
 
   /**

@@ -22,6 +22,31 @@ import { ToolHandlers } from "./tools/handlers.js";
 import { fileURLToPath } from "url";
 import { readFileSync } from "fs";
 import { dirname, resolve } from "path";
+import type {
+  RecraftImagesResponse,
+  RecraftImageResponse,
+  RecraftStyleResponse,
+} from "./types/recraft.js";
+
+/* Interface for file operation response */
+interface FileOperationResponse {
+  success: boolean;
+  file_path: string;
+  message: string;
+}
+
+/* Interface for MCP response */
+interface McpResponse {
+  [key: string]: unknown;
+  _meta?: { [key: string]: unknown };
+}
+
+/* Type for all possible tool responses */
+type ToolResponse =
+  | RecraftImagesResponse
+  | RecraftImageResponse
+  | RecraftStyleResponse
+  | FileOperationResponse;
 
 /**
  * Retrieves package information from package.json for server configuration
@@ -110,9 +135,8 @@ class RecraftMcpServer {
 
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
-        let response;
+        let response: ToolResponse;
         switch (request.params.name) {
-          // Recraft API Tool Handlers
           case "generate_image":
             response = await this.toolHandlers.handleGenerateImage(
               request.params.arguments
@@ -177,17 +201,6 @@ class RecraftMcpServer {
             );
             break;
 
-          case "help":
-            response = {
-              content: [
-                {
-                  type: "text",
-                  text: "Recraft MCP Server provides tools for generating and manipulating images using the Recraft API. Use the available tools to create, edit, and transform images based on text prompts.",
-                },
-              ],
-            };
-            break;
-
           default:
             throw new McpError(
               ErrorCode.InvalidParams,
@@ -195,12 +208,12 @@ class RecraftMcpServer {
             );
         }
 
-        // Return the response in a format compatible with the MCP SDK
-        // The MCP SDK expects a response with a 'tools' property for ListToolsResponse
-        // or a plain object for CallToolResponse
-        return {
+        // Convert response to MCP format
+        const mcpResponse: McpResponse = {
           ...response,
         };
+
+        return mcpResponse;
       } catch (error) {
         if (error instanceof McpError) {
           throw error;
