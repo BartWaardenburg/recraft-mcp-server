@@ -365,24 +365,20 @@ export class RecraftHandlers {
     message: string;
   }> {
     const validatedArgs = this.validateSaveImageToDiskArgs(args);
-    const { image_url, image_b64, output_path, filename } = validatedArgs;
+    const { image_url, image_b64, file_path } = validatedArgs;
 
     try {
-      // Ensure output_path is absolute
-      const absolutePath = path.resolve(output_path);
+      // Ensure file_path is absolute
+      const absolutePath = path.resolve(file_path);
 
       // Create all parent directories if they don't exist
-      await fs.promises.mkdir(absolutePath, { recursive: true });
-
-      // Determine file extension based on image data
-      let fileExtension = "png";
+      await fs.promises.mkdir(path.dirname(absolutePath), { recursive: true });
 
       if (image_b64) {
         // Handle base64 encoded image
         let imageData: Buffer;
         const match = image_b64.match(/^data:image\/([a-zA-Z]+);base64,/);
         if (match) {
-          fileExtension = match[1];
           // Remove the metadata prefix
           const base64Data = image_b64.replace(
             /^data:image\/[a-zA-Z]+;base64,/,
@@ -394,32 +390,16 @@ export class RecraftHandlers {
           imageData = Buffer.from(image_b64, "base64");
         }
 
-        const outputFilePath = path.join(
-          absolutePath,
-          `${filename}.${fileExtension}`
-        );
-        await fs.promises.writeFile(outputFilePath, imageData);
+        await fs.promises.writeFile(absolutePath, imageData);
 
         return {
           success: true,
-          file_path: outputFilePath,
-          message: `Image saved successfully to ${outputFilePath}`,
+          file_path: absolutePath,
+          message: `Image saved successfully to ${absolutePath}`,
         };
       } else if (image_url) {
-        // Handle image URL
-        // Extract file extension from URL if possible
-        const urlExtMatch = image_url.match(/\.([a-zA-Z0-9]+)(?:\?.*)?$/);
-        if (urlExtMatch) {
-          fileExtension = urlExtMatch[1];
-        }
-
-        const outputFilePath = path.join(
-          absolutePath,
-          `${filename}.${fileExtension}`
-        );
-
         // Create a write stream
-        const fileStream = fs.createWriteStream(outputFilePath);
+        const fileStream = fs.createWriteStream(absolutePath);
 
         // Return a promise that resolves when the download is complete
         return new Promise<{
@@ -432,7 +412,7 @@ export class RecraftHandlers {
               // Check if the response is successful
               if (response.statusCode !== 200) {
                 fileStream.close();
-                fs.unlinkSync(outputFilePath); // Remove the file if it exists
+                fs.unlinkSync(absolutePath); // Remove the file if it exists
                 reject(
                   new McpError(
                     ErrorCode.InternalError,
@@ -448,7 +428,7 @@ export class RecraftHandlers {
               // Handle errors
               fileStream.on("error", (err) => {
                 fileStream.close();
-                fs.unlinkSync(outputFilePath); // Remove the file if it exists
+                fs.unlinkSync(absolutePath); // Remove the file if it exists
                 reject(
                   new McpError(
                     ErrorCode.InternalError,
@@ -462,14 +442,14 @@ export class RecraftHandlers {
                 fileStream.close();
                 resolve({
                   success: true,
-                  file_path: outputFilePath,
-                  message: `Image saved successfully to ${outputFilePath}`,
+                  file_path: absolutePath,
+                  message: `Image saved successfully to ${absolutePath}`,
                 });
               });
             })
             .on("error", (err) => {
               fileStream.close();
-              fs.unlinkSync(outputFilePath); // Remove the file if it exists
+              fs.unlinkSync(absolutePath); // Remove the file if it exists
               reject(
                 new McpError(
                   ErrorCode.InternalError,

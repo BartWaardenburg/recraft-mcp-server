@@ -66,22 +66,20 @@ server.addTool({
       }
 
       // Handle saving to disk if requested
-      if (args.save_to_disk && args.output_path && args.filename) {
+      if (args.save_to_disk && args.file_path) {
         log.info("Saving image to disk...", {
-          path: args.output_path,
-          filename: args.filename,
+          path: args.file_path,
         });
 
         try {
           await toolHandlers.handleSaveImageToDisk({
             image_url: imageData.url,
             image_b64: imageData.b64_json,
-            output_path: args.output_path,
-            filename: args.filename,
+            file_path: args.file_path,
           });
 
           log.info("Image saved successfully", {
-            path: `${args.output_path}/${args.filename}`,
+            path: args.file_path,
           });
         } catch (error) {
           throw new UserError(
@@ -93,7 +91,7 @@ server.addTool({
       }
 
       const successMessage = args.save_to_disk
-        ? `Image generated and saved to: ${args.output_path}/${args.filename}`
+        ? `Image generated and saved to: ${args.file_path}`
         : "Image generated successfully";
 
       // Return image content

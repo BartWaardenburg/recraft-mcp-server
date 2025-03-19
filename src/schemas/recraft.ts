@@ -143,25 +143,24 @@ export const GenerateImageArgsSchema = RecraftBaseArgsSchema.extend({
   text_layout: z.array(RecraftTextLayoutElementSchema).optional(),
   /* Optional save parameters */
   save_to_disk: z.boolean().optional(),
-  output_path: z
+  file_path: z
     .string()
-    .min(1, "Output path cannot be empty")
+    .min(1, "File path cannot be empty")
     .refine(
       (path) => !path || path.startsWith("/"),
-      "Output path must be absolute (start with '/')"
+      "File path must be absolute (start with '/')"
     )
     .optional(),
-  filename: z.string().min(1, "Filename cannot be empty").optional(),
 }).refine(
   (data) => {
-    // If save_to_disk is true, both output_path and filename must be provided
+    // If save_to_disk is true, file_path must be provided
     if (data.save_to_disk) {
-      return data.output_path !== undefined && data.filename !== undefined;
+      return data.file_path !== undefined;
     }
     return true;
   },
   {
-    message: "output_path and filename are required when save_to_disk is true",
+    message: "file_path is required when save_to_disk is true",
     path: ["save_to_disk"],
   }
 );
@@ -269,14 +268,13 @@ export const SaveImageToDiskArgsSchema = z
   .object({
     image_url: z.string().url().optional(),
     image_b64: z.string().optional(),
-    output_path: z
+    file_path: z
       .string()
-      .min(1, "Output path cannot be empty")
+      .min(1, "File path cannot be empty")
       .refine(
         (path) => path.startsWith("/"),
-        "Output path must be absolute (start with '/')"
+        "File path must be absolute (start with '/')"
       ),
-    filename: z.string().min(1, "Filename cannot be empty"),
   })
   .refine(
     (data) => data.image_url !== undefined || data.image_b64 !== undefined,
