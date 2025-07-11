@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/bartwaardenburg-recraft-mcp-server-badge.png)](https://mseep.ai/app/bartwaardenburg-recraft-mcp-server)
+
 # Recraft MCP Server
 
 A [Model Context Protocol (MCP)](https://github.com/modelcontextprotocol/mcp) server implementation for integrating with [Recraft.ai](https://recraft.ai) services. This server enables AI assistants to generate images through Recraft's API using the MCP framework.
