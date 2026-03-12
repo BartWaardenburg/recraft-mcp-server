@@ -3,14 +3,15 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "build",
-    "rootDir": ".",
     "strict": true,
-    "esModuleInterop": true,
     "skipLibCheck": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "declaration": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "types": ["node"]
   },
-  "include": ["src/**/*", "scripts/**/*"],
-  "exclude": ["node_modules", "build"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "src/**/*.test.ts", "vitest.config.ts"]
 }

@@ -1,143 +1,162 @@
-# Recraft MCP Server
+# recraft-mcp
 
-A [Model Context Protocol (MCP)](https://github.com/modelcontextprotocol/mcp) server implementation for integrating with [Recraft.ai](https://recraft.ai) services. This server enables AI assistants to generate images through Recraft's API using the MCP framework.
+MCP server for AI image generation, transformation, and style management via the [Recraft API](https://www.recraft.ai/api).
 
-## 🌟 Features
+## Features
 
-- Implements MCP tools for Recraft image generation services
-- Provides type-safe schemas using Zod for validation
-- Supports various image generation options (styles, sizes, etc.)
-- Easy integration with LLM assistants that support MCP
+- **Image Generation** — Text-to-image, image-to-image, inpainting, background replacement & generation
+- **Image Processing** — Background removal, region erasing, vectorization (SVG), crisp & creative upscaling
+- **Style Management** — Create custom styles from reference images, list/get/delete styles
+- **User Info** — Check remaining credits and account details
+- **Toolset Filtering** — Reduce context window by enabling only the toolsets you need
+- **Caching** — Configurable TTL-based response caching
+- **Retry** — Automatic retry with exponential backoff on rate limits
 
-## 📋 Prerequisites
+## Quick Start
 
-- Node.js (v18 or later recommended)
-- A Recraft API key from [recraft.ai](https://recraft.ai)
+### Prerequisites
 
-## 🚀 Installation
+- Node.js 20+
+- A [Recraft API token](https://www.recraft.ai/profile/api)
 
-1. Clone the repository:
-
-   ```bash
-   git clone https://github.com/yourusername/recraft-mcp-server.git
-   cd recraft-mcp-server
-   ```
-
-2. Install dependencies:
-
-   ```bash
-   npm install
-   ```
-
-3. Copy the environment file and configure your API key:
-   ```bash
-   cp .env.example .env
-   ```
-   Then edit `.env` and add your Recraft API key.
-
-## ⚙️ Configuration
-
-The server uses the following environment variables:
-
-- `RECRAFT_API_URL`: The Recraft API endpoint (default: https://external.api.recraft.ai)
-- `RECRAFT_API_KEY`: Your Recraft API key
-
-## 🔧 Usage
-
-### Building the Server
+### Install
 
 ```bash
-npm run build
+npm install -g recraft-mcp
 ```
 
-### Starting the Server
+### Configure
+
+Set the required environment variable:
 
 ```bash
-npm start
+export RECRAFT_API_TOKEN="your-api-token"
 ```
 
-Or use the provided shell script:
+### Usage with Claude Desktop
+
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "recraft": {
+      "command": "npx",
+      "args": ["-y", "recraft-mcp"],
+      "env": {
+        "RECRAFT_API_TOKEN": "your-api-token"
+      }
+    }
+  }
+}
+```
+
+### Usage with Claude Code
 
 ```bash
-./start-mcp.sh
+claude mcp add recraft-mcp -e RECRAFT_API_TOKEN=your-api-token -- npx -y recraft-mcp
 ```
 
-### Development Mode
+### Docker
 
 ```bash
-npm run dev
+docker run -e RECRAFT_API_TOKEN="your-api-token" ghcr.io/bartwaardenburg/recraft-mcp-server:latest
 ```
 
-### Inspecting the MCP Server
+## Tools
 
-The MCP SDK includes an inspector tool to test the server:
+### Generation Tools
+
+| Tool | Description |
+|------|-------------|
+| `generate_image` | Generate images from a text prompt with style, size, and artistic controls |
+| `image_to_image` | Transform an existing image based on a text prompt with adjustable strength |
+| `inpaint_image` | Fill in masked regions of an image based on a text prompt |
+| `replace_background` | Replace the background while preserving the foreground subject |
+| `generate_background` | Generate a background for masked areas of an image |
+
+### Processing Tools
+
+| Tool | Description |
+|------|-------------|
+| `remove_background` | Remove the background, leaving transparency |
+| `erase_region` | Seamlessly erase a masked region from an image |
+| `vectorize_image` | Convert raster images to scalable SVG vectors |
+| `crisp_upscale` | Upscale with sharp detail preservation |
+| `creative_upscale` | Upscale with creative enhancement and added detail |
+
+### Style & User Tools
+
+| Tool | Description |
+|------|-------------|
+| `create_style` | Create a custom style from 1-5 reference images |
+| `get_style` | Get details of a custom style by ID |
+| `list_styles` | List all custom styles |
+| `list_basic_styles` | List available curated styles |
+| `delete_style` | Delete a custom style |
+| `get_current_user` | Get user info and remaining credits |
+
+## Configuration
+
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `RECRAFT_API_TOKEN` | **Required.** Recraft API token | — |
+| `RECRAFT_TOOLSETS` | Comma-separated list of toolsets to enable (`generation`, `processing`, `styles`) | All |
+| `RECRAFT_CACHE_TTL` | Cache TTL in seconds (0 to disable) | 120 |
+| `RECRAFT_MAX_RETRIES` | Maximum retry attempts on rate limit (429) | 3 |
+
+### Toolset Filtering
+
+Reduce the number of tools exposed to the LLM by setting `RECRAFT_TOOLSETS`:
 
 ```bash
-npm run inspect
+# Only image generation tools
+RECRAFT_TOOLSETS=generation
+
+# Generation and processing, no style management
+RECRAFT_TOOLSETS=generation,processing
 ```
 
-## 🧪 Testing
+## Supported Models
 
-Run tests:
+| Model | Description |
+|-------|-------------|
+| `recraftv3` | Recraft V3 (default) |
+| `recraftv4` | Recraft V4 (latest raster) |
+| `recraftv4_vector` | Recraft V4 Vector (SVG output) |
+| `recraftv2` | Recraft V2 |
+| `recraft20b` | Recraft 20B (legacy) |
+| `refm1` | RefM1 |
+
+> **Note:** V4 models do not support the `style` parameter — use the prompt to control style.
+
+## Supported Styles
+
+- `realistic_image` (default)
+- `digital_illustration`
+- `vector_illustration`
+- `icon`
+- `logo_raster`
+
+Each style supports various substyles (e.g., `b_and_w`, `pixel_art`, `watercolor`, `pop_art`, etc.).
+
+## Image Input
+
+For tools that accept images (image_to_image, inpaint, upscale, etc.), provide images as:
+
+- **URL** — A publicly accessible HTTP(S) URL to the image
+- **Base64** — Raw base64-encoded image data
+
+## Development
 
 ```bash
-npm test
+pnpm install
+pnpm dev          # Run with tsx
+pnpm build        # Compile TypeScript
+pnpm test         # Run tests
+pnpm typecheck    # Type check without emitting
 ```
 
-Run tests with coverage:
-
-```bash
-npm run test:coverage
-```
-
-Watch mode for tests:
-
-```bash
-npm run test:watch
-```
-
-## 🔍 Validation
-
-The project uses [Zod](https://github.com/colinhacks/zod) for schema validation. See `ZOD_IMPLEMENTATION.md` for details on the implementation.
-
-## 📝 API
-
-This server implements the following MCP tools:
-
-- `generate_image`: Generate images from text prompts
-- `image_to_image`: Transform an existing image based on a text prompt
-- `inpaint_image`: Edit parts of an image using a mask
-- `replace_background`: Replace the background of an image
-- `vectorize_image`: Convert raster images to vector format
-- `remove_background`: Remove the background from an image
-- `crisp_upscale`: Upscale images with enhanced detail and clarity
-- `creative_upscale`: Upscale images with creative enhancements
-- `create_style`: Create a new style based on reference images
-- `get_user_info`: Retrieve information about the current user
-- `save_image_to_disk`: Save generated images to the local filesystem
-
-The server also responds to a special `help` command which provides general information about the available tools, but this is handled as a special case in the server logic rather than as a formal tool definition.
-
-For detailed information about the available parameters and options for each tool, use the MCP inspector tool or review the tool definitions in the code.
-
-## 🛠️ Development
-
-### Linting and Type Checking
-
-```bash
-# Run type checking
-npm run type-check
-
-# Run eslint
-npm run lint
-
-# Fix linting issues
-npm run lint:fix
-
-# Run both type checking and linting
-npm run validate
-```
-
-## 📄 License
+## License
 
 MIT

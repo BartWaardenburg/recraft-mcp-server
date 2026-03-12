@@ -1,0 +1,7 @@
+src/
+*.test.ts
+vitest.config.ts
+.release-it.json
+.github/
+tsconfig.json
+.claude/

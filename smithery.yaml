@@ -1,0 +1,18 @@
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required:
+      - apiToken
+    properties:
+      apiToken:
+        type: string
+        description: Recraft API token
+  commandFunction: |
+    (config) => ({
+      command: 'npx',
+      args: ['-y', 'recraft-mcp'],
+      env: {
+        RECRAFT_API_TOKEN: config.apiToken
+      }
+    })

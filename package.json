@@ -1,50 +1,69 @@
 {
-  "name": "recraft-mcp-server",
-  "version": "0.0.1",
-  "description": "MCP Server implementation for recraft.ai using the Model Context Protocol SDK",
+  "name": "recraft-mcp",
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.28.1",
+  "description": "MCP server for AI image generation, transformation, and style management via the Recraft API",
   "type": "module",
-  "main": "dist/index.js",
+  "bin": {
+    "recraft-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsup src/index.ts --format esm --dts --clean",
-    "postbuild": "chmod +x dist/index.js",
-    "start": "node dist/index.js",
-    "dev": "npx fastmcp dev src/index.ts",
-    "inspect": "npx fastmcp inspect src/index.ts",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "type-check": "tsc --noEmit",
-    "validate": "npm run type-check && npm run lint",
+    "dev": "tsx src/index.ts",
+    "start": "node --enable-source-maps dist/index.js",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
+    "prepublishOnly": "pnpm build",
+    "release": "GITHUB_TOKEN=$(gh auth token) release-it"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BartWaardenburg/recraft-mcp-server.git"
   },
   "keywords": [
     "mcp",
-    "modelcontextprotocol",
-    "ai"
+    "mcp-server",
+    "model-context-protocol",
+    "recraft",
+    "image-generation",
+    "ai-images",
+    "text-to-image",
+    "image-editing",
+    "vectorize",
+    "upscale",
+    "background-removal",
+    "inpainting",
+    "style-transfer",
+    "svg",
+    "automation",
+    "ai",
+    "typescript",
+    "nodejs"
   ],
-  "author": "",
+  "author": "Bart Waardenburg",
   "license": "MIT",
+  "mcpName": "io.github.BartWaardenburg/recraft-mcp",
+  "bugs": {
+    "url": "https://github.com/BartWaardenburg/recraft-mcp-server/issues"
+  },
+  "homepage": "https://github.com/BartWaardenburg/recraft-mcp-server#readme",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "axios": "^1.8.1",
-    "dotenv": "^16.4.7",
-    "fastmcp": "^1.20.5",
-    "zod": "^3.23.8",
-    "zod-to-json-schema": "^3.24.4"
+    "@modelcontextprotocol/sdk": "^1.26.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@eslint/js": "^9.8.0",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "^22.0.2",
-    "@types/supertest": "^6.0.2",
-    "@vitest/coverage-v8": "^3.0.7",
-    "cross-env": "^7.0.3",
-    "eslint": "^9.8.0",
-    "tsup": "^8.4.0",
-    "tsx": "^4.19.3",
-    "typescript": "^5.7.3",
-    "typescript-eslint": "^8.0.0",
-    "vitest": "^3.0.7"
+    "@release-it/conventional-changelog": "^10.0.5",
+    "@types/node": "^20.19.30",
+    "@vitest/coverage-v8": "^4.0.18",
+    "release-it": "^19.2.4",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
