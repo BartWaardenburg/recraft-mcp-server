@@ -1,0 +1,69 @@
+name: Bug Report
+description: Report a bug with recraft-mcp
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please fill out the sections below.
+
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: "Run `npx recraft-mcp --version` or check package.json"
+      placeholder: "0.1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: client
+    attributes:
+      label: MCP Client
+      options:
+        - Claude Desktop
+        - VS Code (Copilot)
+        - Claude Code
+        - Cursor
+        - Windsurf
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened? What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal steps to reproduce the issue
+      placeholder: |
+        1. Configure recraft-mcp with...
+        2. Call tool...
+        3. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Output / Logs
+      description: Any error messages or relevant log output
+      render: shell
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Installation Method
+      options:
+        - npx
+        - Global install (npm install -g)
+        - Docker
+        - Smithery
+        - From source

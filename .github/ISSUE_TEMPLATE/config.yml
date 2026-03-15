@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Recraft API Documentation
+    url: https://www.recraft.ai/docs
+    about: For questions about the Recraft API itself
+  - name: MCP Specification
+    url: https://modelcontextprotocol.io
+    about: For questions about the Model Context Protocol
