@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.1.2](https://github.com/BartWaardenburg/recraft-mcp-server/compare/v0.1.1...v0.1.2) (2026-03-16)
+
 ## 0.1.1 (2026-03-16)
 
 
