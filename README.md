@@ -22,6 +22,8 @@
 
 ---
 
+> **Note:** This is an unofficial, community-maintained project and is not affiliated with or endorsed by Recraft.
+
 **16 tools** for image generation, processing, and style management — all accessible through the [Model Context Protocol](https://modelcontextprotocol.io/).
 
 - **Generate** — Text-to-image, image-to-image, inpainting, background replacement & generation
