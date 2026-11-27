@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { McpServer } from "@modelcontextprotocol/server";
 import { RecraftClient } from "../recraft-client.js";
 import { registerGenerationTools } from "./generation.js";
 import { registerProcessingTools } from "./processing.js";
