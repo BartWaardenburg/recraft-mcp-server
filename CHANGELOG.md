@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.1](https://github.com/BartWaardenburg/recraft-mcp-server/compare/v0.2.0...v0.2.1) (2026-11-27)
+
+### Bug Fixes
+
+* copy pnpm-workspace.yaml into the Docker build and build the image in CI ([768902d](https://github.com/BartWaardenburg/recraft-mcp-server/commit/768902db6ce7b541106dc96331c6b1bbc1b92298))
+
+# [0.2.0](https://github.com/BartWaardenburg/recraft-mcp-server/compare/v0.1.2...v0.2.0) (2026-11-27)
+
+### Features
+
+* move to MCP TypeScript SDK v2 and spec 2026-07-28 ([#4](https://github.com/BartWaardenburg/recraft-mcp-server/issues/4)) ([bf3a5f1](https://github.com/BartWaardenburg/recraft-mcp-server/commit/bf3a5f1ed36e456306154a8d9fecd73abc7f3c37))
+
 ## [0.1.2](https://github.com/BartWaardenburg/recraft-mcp-server/compare/v0.1.1...v0.1.2) (2026-03-16)
 
 ## 0.1.1 (2026-03-16)
