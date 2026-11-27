@@ -1,16 +1,52 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.BartWaardenburg/recraft-mcp",
+  "title": "Recraft",
   "description": "AI image generation, transformation, and style management via the Recraft API",
-  "version": "0.1.0",
+  "repository": {
+    "url": "https://github.com/BartWaardenburg/recraft-mcp-server",
+    "source": "github"
+  },
+  "websiteUrl": "https://www.recraft.ai",
+  "version": "0.1.2",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "recraft-mcp",
-      "version": "0.1.0",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
-      }
+      },
+      "environmentVariables": [
+        {
+          "name": "RECRAFT_API_TOKEN",
+          "description": "Recraft API token",
+          "isRequired": true,
+          "isSecret": true,
+          "format": "string"
+        },
+        {
+          "name": "RECRAFT_TOOLSETS",
+          "description": "Comma-separated toolsets to enable: generation, processing, styles. Default: all",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "RECRAFT_CACHE_TTL",
+          "description": "Cache TTL in seconds. Use 0 to disable. Default: 120",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        },
+        {
+          "name": "RECRAFT_MAX_RETRIES",
+          "description": "Maximum retry attempts on rate limit (429). Default: 3",
+          "isRequired": false,
+          "isSecret": false,
+          "format": "string"
+        }
+      ]
     }
   ]
 }

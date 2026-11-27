@@ -26,6 +26,8 @@
 
 **16 tools** for image generation, processing, and style management — all accessible through the [Model Context Protocol](https://modelcontextprotocol.io/).
 
+The server supports MCP specification 2026-07-28. Clients that use the 2025 handshake also work.
+
 - **Generate** — Text-to-image, image-to-image, inpainting, background replacement & generation
 - **Process** — Background removal, region erasing, vectorization (SVG), crisp & creative upscaling
 - **Styles** — Create custom styles from reference images, list/get/delete styles
